@@ -57,3 +57,9 @@ El ZIP `Transportes-VAAX-completo.zip` contiene `index.html`, `css/`, `js/` y `a
 `VAAX-vista-completa.html` es una copia autónoma generada a partir del mismo diseño: incluye CSS, JavaScript, imágenes y fuentes dentro del HTML. Puedes descargarla y abrirla sin carpetas adicionales. No reemplaza los archivos fuente; para editar el sitio usa `index.html`, `css/styles.css` y `js/main.js`. El HTML autónomo también está dentro del ZIP.
 
 Se extrajo el nuevo ZIP a una carpeta temporal y se sirvió con un servidor HTTP estático independiente. Sus 18 archivos respondieron HTTP 200 y coincidieron byte por byte con el contenido del ZIP. Se verificaron tipos MIME de CSS y JavaScript, fuentes, logotipo, imágenes, galería y menú móvil. No se detectaron 404 ni errores de JavaScript. Las capturas de escritorio del original, el ZIP extraído y la vista autónoma fueron idénticas píxel por píxel. La vista autónoma no solicitó recursos HTTP adicionales al documento.
+
+## Ajustes de legibilidad y controles
+
+Texto de contenido y campos de formulario de al menos 16 px, notas de 14 px y etiquetas auxiliares ampliadas. Enlaces de WhatsApp con iconos SVG locales, etiquetas accesibles y ambas líneas originales. Botón circular fijo abajo a la derecha para volver al inicio mediante icono de flecha, también disponible sin JavaScript. Menú colapsable hasta 1100 px para acomodar la tipografía mayor.
+
+Verificado en Chromium a 320, 390, 768, 1024, 1100, 1280, 1440 y 1920 px: sin desbordamiento horizontal, errores de JavaScript ni errores HTTP. Se comprobaron el menú, las etiquetas y destinos de WhatsApp, la posición fija del botón y su retorno al inicio.

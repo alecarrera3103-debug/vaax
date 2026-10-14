@@ -23,7 +23,7 @@ document.addEventListener('keydown', event => {
   }
 });
 document.addEventListener('click', event => { if (!header.contains(event.target)) closeMenu(); });
-window.matchMedia('(min-width: 801px)').addEventListener('change', closeMenu);
+window.matchMedia('(min-width: 1101px)').addEventListener('change', closeMenu);
 let scrollQueued = false;
 function updateScroll() {
   const distance = document.documentElement.scrollHeight - window.innerHeight;
