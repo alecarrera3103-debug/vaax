@@ -165,16 +165,10 @@ body{font-size:16px}
 
 .brand>span{line-height:1.35}
 
-/* White labels on gold need a darker gold (5.12:1 against white). */
-:root{--gold-surface:#8c6813;--gold-surface-hover:#7d5d10;--gold-surface-active:#6d510e}
-.button-gold,.capacity,.back-top,.skip-link{background:var(--gold-surface);color:#fff}
-.button-gold:hover,.back-top:hover{background:var(--gold-surface-hover);color:#fff}
-.button-gold:focus-visible,.back-top:focus-visible,.skip-link:focus-visible{background:var(--gold-surface);color:#fff;outline:3px solid var(--navy);box-shadow:0 0 0 6px #fff}
-.button-gold:active,.back-top:active{background:var(--gold-surface-active);color:#fff}
-.capacity *{color:inherit}
-.circle-button:hover,.circle-button:focus-visible{background:var(--gold-surface);border-color:var(--gold-surface);color:#fff}
-.circle-button:active{background:var(--gold-surface-active);color:#fff}
-::selection{background:var(--gold-surface);color:#fff}
+/* Restore the exact corporate gold and legible navy labels from f7e5d6b. */
+.fleet-dot[aria-current]>span{background:var(--gold);box-shadow:0 0 0 1px var(--navy)}
+.button-gold:focus-visible,.back-top:focus-visible,.circle-button:focus-visible,.skip-link:focus-visible{background:var(--gold);color:var(--navy);outline:3px solid var(--navy);box-shadow:0 0 0 6px #fff}
+.circle-button:active{background:var(--gold);color:var(--navy)}
 
 /* Four stops, one lightweight route. Only transforms animate on selection. */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
@@ -184,11 +178,11 @@ body{font-size:16px}
 .js-ready .process-journey .process-steps>li.reveal{transform:none}
 .process-stop{display:grid;place-items:center;width:44px;height:44px;margin:0 0 26px;padding:0;border:1px solid #a9b1b7;border-radius:50%;background:#fff;color:var(--navy);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
 .process-stop:disabled{opacity:1;cursor:default}
-.process-stop[aria-pressed=true],.process-stop:hover,.process-stop:focus-visible{background:var(--gold-surface);color:#fff;border-color:var(--gold-surface)}
-.process-stop:active{background:var(--gold-surface-active);color:#fff}
-.process-stop[aria-pressed=true]~h3{color:#806015}
+.process-stop[aria-pressed=true],.process-stop:hover,.process-stop:focus-visible{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.process-stop:active{background:var(--gold);color:var(--navy)}
+.process-stop[aria-pressed=true]~h3{color:var(--navy);text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:6px}
 .process-steps>li:before{content:'';position:absolute;left:21px;top:-19px;height:19px;width:1px;background:#c6ccce}
-.process-road{position:absolute;left:22px;right:calc(25% - 44.5px);top:13px;height:14px;border:1px solid #bac2c4;border-radius:7px;background:#e8ebe9;overflow:hidden;pointer-events:none}
+.process-road{position:absolute;left:22px;right:8px;top:13px;height:14px;border:1px solid #bac2c4;border-radius:7px;background:#e8ebe9;overflow:hidden;pointer-events:none}
 .process-road:after{content:'';position:absolute;inset:5px 0 auto;height:2px;background:repeating-linear-gradient(90deg,#7b8892 0 9px,transparent 9px 17px);opacity:.6}
 .process-progress{position:absolute;inset:0;background:#d9ae3080;transform:scaleX(0);transform-origin:left;transition-property:transform;transition-timing-function:cubic-bezier(.22,.61,.36,1)}
 .process-vehicle{position:absolute;left:0;top:0;width:44px;height:26px;transform:translate3d(0,7px,0);pointer-events:none;z-index:2;transition-property:transform;transition-timing-function:cubic-bezier(.22,.61,.36,1)}
@@ -198,13 +192,16 @@ body{font-size:16px}
  .process-journey .process-steps>li{padding-left:94px;min-height:125px}
  .process-stop{position:absolute;top:0;left:38px;margin:0}
  .process-steps>li:before{left:14px;top:21px;height:1px;width:24px}
- .process-road{left:7px;right:auto;top:22px;width:14px;height:calc(100% - 125px)}
+ .process-road{left:7px;right:auto;top:22px;width:14px;height:calc(100% - 30px)}
  .process-road:after{inset:0 auto 0 5px;width:2px;height:auto;background:repeating-linear-gradient(180deg,#7b8892 0 9px,transparent 9px 17px)}
  .process-progress{transform:scaleY(0);transform-origin:top}
  .process-bus-art{transform:rotate(var(--vehicle-angle,90deg))}
 }
-/* Keep the hover sheen subtle enough to preserve white-label contrast. */
-.button-gold::before{background:linear-gradient(110deg,transparent 30%,#ffffff0a 50%,transparent 70%)}
+
+
+/* A rounded terminal marker finishes the lane without a hard cut. */
+.process-road:before{content:'';position:absolute;right:3px;top:2px;bottom:2px;width:2px;background:#14263e55;border-radius:2px;z-index:1}
+@media(max-width:580px){.process-road:before{top:auto;bottom:3px;left:2px;right:2px;width:auto;height:2px}}
 </style><noscript><style>@media(max-width:1100px){.header{position:relative;height:auto;flex-wrap:wrap;padding-top:15px;padding-bottom:15px}.menu-toggle{display:none}.nav{position:static;display:flex;flex-wrap:wrap;box-shadow:none;padding:0;gap:12px}.nav>a:not(.button){font-size:12px;padding:5px}.nav-cta{margin:0}}</style></noscript>
 <script type="application/ld+json" id="organization-schema">{"@context": "https://schema.org", "@type": "Organization", "name": "Transportes VAAX", "description": "Servicio de transporte de personal para empresas industriales y comerciales, con rutas personalizadas y monitoreo GPS.", "foundingDate": "2011", "email": "juan.rdz@transportesvaax.com", "telephone": ["+528123999360", "+528118017881"], "sameAs": ["https://www.instagram.com/transportes.vaax/"], "@id": "https://transportesvaax.com/#organization", "url": "https://transportesvaax.com/", "logo": "https://transportesvaax.com/assets/logo/vaax.png"}</script>
 </head>
@@ -448,6 +445,7 @@ const processVehicle = processJourney.querySelector('.process-vehicle');
 const processRoad = processJourney.querySelector('.process-road');
 const processProgress = processJourney.querySelector('.process-progress');
 let routePoints = [];
+let routeEndPoint;
 let selectedStop = 0;
 let routeIsVertical = false;
 let processKeyboardNavigation = false;
@@ -469,7 +467,7 @@ function placeProcessVehicle(index, instant = false) {
   processProgress.style.transitionDuration = `${duration.toFixed(0)}ms`;
   processVehicle.style.transform = `translate3d(${x}px,${y}px,0)`;
   const first = routePoints[0];
-  const last = routePoints[3];
+  const last = routeEndPoint;
   const progress = routeIsVertical ? (target.y - first.y) / Math.max(1, last.y - first.y) : (target.x - first.x) / Math.max(1, last.x - first.x);
   processProgress.style.transform = `${routeIsVertical ? 'scaleY' : 'scaleX'}(${progress})`;
 }
@@ -481,7 +479,11 @@ function measureProcessRoute() {
     return { x: routeIsVertical ? 14 : rect.left - box.left + rect.width / 2, y: routeIsVertical ? rect.top - box.top + rect.height / 2 : 20 };
   });
   const first = routePoints[0];
-  const last = routePoints[3];
+  // Keep the numbered stops fixed. Only destination 04 continues to the end.
+  // Leave enough room for the entire vehicle, its shadow and the terminal marker.
+  routeEndPoint = routeIsVertical ? { x: first.x, y: box.height - 8 } : { x: box.width - 8, y: first.y };
+  routePoints[3] = routeIsVertical ? { x: first.x, y: routeEndPoint.y - 26 } : { x: routeEndPoint.x - 26, y: first.y };
+  const last = routeEndPoint;
   Object.assign(processRoad.style, {
     left: `${first.x - (routeIsVertical ? 7 : 0)}px`, top: `${first.y - (routeIsVertical ? 0 : 7)}px`, right: 'auto',
     width: `${routeIsVertical ? 14 : last.x - first.x}px`, height: `${routeIsVertical ? last.y - first.y : 14}px`

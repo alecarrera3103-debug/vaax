@@ -215,6 +215,7 @@ const processVehicle = processJourney.querySelector('.process-vehicle');
 const processRoad = processJourney.querySelector('.process-road');
 const processProgress = processJourney.querySelector('.process-progress');
 let routePoints = [];
+let routeEndPoint;
 let selectedStop = 0;
 let routeIsVertical = false;
 let processKeyboardNavigation = false;
@@ -236,7 +237,7 @@ function placeProcessVehicle(index, instant = false) {
   processProgress.style.transitionDuration = `${duration.toFixed(0)}ms`;
   processVehicle.style.transform = `translate3d(${x}px,${y}px,0)`;
   const first = routePoints[0];
-  const last = routePoints[3];
+  const last = routeEndPoint;
   const progress = routeIsVertical ? (target.y - first.y) / Math.max(1, last.y - first.y) : (target.x - first.x) / Math.max(1, last.x - first.x);
   processProgress.style.transform = `${routeIsVertical ? 'scaleY' : 'scaleX'}(${progress})`;
 }
@@ -248,7 +249,11 @@ function measureProcessRoute() {
     return { x: routeIsVertical ? 14 : rect.left - box.left + rect.width / 2, y: routeIsVertical ? rect.top - box.top + rect.height / 2 : 20 };
   });
   const first = routePoints[0];
-  const last = routePoints[3];
+  // Keep the numbered stops fixed. Only destination 04 continues to the end.
+  // Leave enough room for the entire vehicle, its shadow and the terminal marker.
+  routeEndPoint = routeIsVertical ? { x: first.x, y: box.height - 8 } : { x: box.width - 8, y: first.y };
+  routePoints[3] = routeIsVertical ? { x: first.x, y: routeEndPoint.y - 26 } : { x: routeEndPoint.x - 26, y: first.y };
+  const last = routeEndPoint;
   Object.assign(processRoad.style, {
     left: `${first.x - (routeIsVertical ? 7 : 0)}px`, top: `${first.y - (routeIsVertical ? 0 : 7)}px`, right: 'auto',
     width: `${routeIsVertical ? 14 : last.x - first.x}px`, height: `${routeIsVertical ? last.y - first.y : 14}px`
