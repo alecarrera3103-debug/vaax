@@ -23,7 +23,7 @@ El protocolo `file://` está bloqueado por el navegador administrado de este ent
 - Entradas diferenciadas para títulos, fotografía de Nosotros, listado de seguridad, proceso y formulario. Parallax acotado a ±12 px, solo en escritorio, sobre la imagen principal y la fotografía de Nosotros.
 - Rutas animadas, pulsos suaves, microinteracciones de botones y flotilla con transición direccional, paginación accesible, teclado y gesto horizontal táctil. No hay avance automático de fotografías.
 - Las animaciones repetitivas se pausan fuera de pantalla y se desactivan con `prefers-reduced-motion`. El desplazamiento de página es nativo.
-- SVG de correo, teléfono, WhatsApp, Instagram y Facebook en contacto/footer. Los originales están en `assets/icons`; los símbolos se incorporan en el HTML para evitar solicitudes adicionales. Facebook no tiene enlace porque no se ha confirmado su URL.
+- SVG de correo, teléfono, WhatsApp, Instagram y Facebook en sus ubicaciones de contacto. El footer conserva teléfonos con icono de teléfono, sin duplicar accesos de WhatsApp. Los originales están en `assets/icons`; los símbolos se incorporan en el HTML para evitar solicitudes adicionales. Facebook no tiene enlace porque no se ha confirmado su URL.
 - Texto de contenido y campos de al menos 16 px, notas de 14 px y estados de foco visibles. Fuentes locales con sus licencias en `assets/fonts`.
 
 ## Formulario: envío pendiente
@@ -67,3 +67,13 @@ No se ha desplegado ni enviado ningún mensaje o correo. Los enlaces abren las a
 Revisión visual en Chromium de escritorio y móvil. Verificados los tamaños 320, 390, 580, 768, 1024, 1100, 1280, 1440 y 1920 px sin desbordamiento horizontal. Comprobados: carga de todas las imágenes y SVG, exclusividad del acordeón, altura constante de imagen, navegación de teclado, paginación y flechas de flotilla, menú móvil, ausencia de solicitudes/recarga al enviar el formulario, animaciones y preferencia de movimiento reducido. Sin JavaScript se mantienen contenido, contacto y acordeón nativo; el envío permanece deshabilitado. Sin errores JavaScript ni respuestas HTTP fallidas en los recorridos probados.
 
 El ZIP se valida con CRC y comparación de todos los archivos fuente; la copia autónoma también se prueba mediante HTTP antes de entregar. No se ha desplegado un sitio público ni enviado mensajes a contactos.
+
+## Ruta interactiva, SEO y campañas
+
+La sección «Así avanzamos juntos» mantiene sus cuatro textos y números, con una carretera minimalista y un minibús SVG local. Selección mediante hover, clic, toque y teclado (flechas, Inicio y Fin); el recorrido dura proporcionalmente a la distancia, termina aunque se retire el cursor y no tiene bucles. Se anima por transform sin medir layout en cada fotograma. La geometría solo se recalcula al cambiar tamaño o cargarse las fuentes. En móviles se conserva la disposición vertical y los números quedan separados del vehículo. Se respeta movimiento reducido.
+
+Los elementos con fondo dorado muestran texto/flechas blancos sobre un dorado oscurecido con contraste mínimo 5.12:1 en estado normal. Hover 6.10:1 y active aún mayor. Se preservan los acentos dorados sobre azul.
+
+Dominio confirmado: https://transportesvaax.com/. Canonical, robots, sitemap, Open Graph, imagen social y Organization JSON-LD están configurados con ese dominio. Consulta **SEO-Y-CAMPANAS.md** para publicación, palabras clave por intención, integración de GTM/GA4/Ads, atribución, consentimiento y confirmación real de conversiones. No se han instalado etiquetas externas. Los clics en el formulario inactivo no se cuentan como leads.
+
+Las imágenes principales tienen variantes responsive locales; se conservan los originales. Las fuentes se precargan sin dependencias externas. Los resultados comparativos de laboratorio y sus límites están en **RENDIMIENTO.md**. La indexación y Core Web Vitals de usuarios reales requieren el hosting publicado y datos de Search Console/CrUX.

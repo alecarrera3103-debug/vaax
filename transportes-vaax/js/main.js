@@ -207,3 +207,114 @@ window.addEventListener('scroll', queueParallax, { passive: true });
 window.addEventListener('resize', queueParallax);
 reducedMotion.addEventListener('change', queueParallax);
 queueParallax();
+
+// Route geometry is measured only on resize/font readiness, never per frame.
+const processJourney = document.querySelector('.process-journey');
+const processStops = [...processJourney.querySelectorAll('.process-stop')];
+const processVehicle = processJourney.querySelector('.process-vehicle');
+const processRoad = processJourney.querySelector('.process-road');
+const processProgress = processJourney.querySelector('.process-progress');
+let routePoints = [];
+let selectedStop = 0;
+let routeIsVertical = false;
+let processKeyboardNavigation = false;
+processJourney.addEventListener('pointermove', event => {
+  if (event.movementX || event.movementY) processKeyboardNavigation = false;
+});
+function placeProcessVehicle(index, instant = false) {
+  if (!routePoints.length) return;
+  const target = routePoints[index];
+  const x = target.x - 22;
+  const y = target.y - 13;
+  const matrix = new DOMMatrixReadOnly(getComputedStyle(processVehicle).transform);
+  const distance = Math.hypot(x - matrix.m41, y - matrix.m42);
+  const total = Math.hypot(routePoints[3].x - routePoints[0].x, routePoints[3].y - routePoints[0].y);
+  const duration = instant || reducedMotion.matches ? 0 : Math.max(140, distance / Math.max(total, 1) * 1100);
+  if (routeIsVertical) processVehicle.style.setProperty('--vehicle-angle', y < matrix.m42 ? '-90deg' : '90deg');
+  else processVehicle.style.setProperty('--vehicle-facing', x < matrix.m41 ? -1 : 1);
+  processVehicle.style.transitionDuration = `${duration.toFixed(0)}ms`;
+  processProgress.style.transitionDuration = `${duration.toFixed(0)}ms`;
+  processVehicle.style.transform = `translate3d(${x}px,${y}px,0)`;
+  const first = routePoints[0];
+  const last = routePoints[3];
+  const progress = routeIsVertical ? (target.y - first.y) / Math.max(1, last.y - first.y) : (target.x - first.x) / Math.max(1, last.x - first.x);
+  processProgress.style.transform = `${routeIsVertical ? 'scaleY' : 'scaleX'}(${progress})`;
+}
+function measureProcessRoute() {
+  const box = processJourney.getBoundingClientRect();
+  routeIsVertical = window.matchMedia('(max-width:580px)').matches;
+  routePoints = processStops.map(stop => {
+    const rect = stop.getBoundingClientRect();
+    return { x: routeIsVertical ? 14 : rect.left - box.left + rect.width / 2, y: routeIsVertical ? rect.top - box.top + rect.height / 2 : 20 };
+  });
+  const first = routePoints[0];
+  const last = routePoints[3];
+  Object.assign(processRoad.style, {
+    left: `${first.x - (routeIsVertical ? 7 : 0)}px`, top: `${first.y - (routeIsVertical ? 0 : 7)}px`, right: 'auto',
+    width: `${routeIsVertical ? 14 : last.x - first.x}px`, height: `${routeIsVertical ? last.y - first.y : 14}px`
+  });
+  placeProcessVehicle(selectedStop, true);
+}
+function selectProcessStop(index) {
+  if (index === selectedStop) return;
+  selectedStop = index;
+  processStops.forEach((stop, position) => stop.setAttribute('aria-pressed', String(position === index)));
+  placeProcessVehicle(index);
+  document.querySelector('#process-status').textContent = processStops[index].getAttribute('aria-label');
+}
+processStops.forEach((stop, index) => {
+  stop.disabled = false;
+  stop.closest('li').addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse' && window.matchMedia('(hover:hover) and (pointer:fine)').matches && window.innerWidth > 580 && !processKeyboardNavigation) selectProcessStop(index);
+  });
+  stop.closest('li').addEventListener('click', () => selectProcessStop(index));
+  stop.addEventListener('focus', () => selectProcessStop(index));
+  stop.addEventListener('keydown', event => {
+    let next;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % 4;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index + 3) % 4;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = 3;
+    if (next !== undefined) { event.preventDefault(); processKeyboardNavigation = true; processStops[next].focus(); }
+  });
+});
+if ('ResizeObserver' in window) new ResizeObserver(measureProcessRoute).observe(processJourney);
+else window.addEventListener('resize', measureProcessRoute);
+if (document.fonts) document.fonts.ready.then(measureProcessRoute);
+reducedMotion.addEventListener('change', measureProcessRoute);
+measureProcessRoute();
+
+// Attribution stays in memory and in hidden fields; no cookies or storage.
+const attributionNames = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id','gclid','gbraid','wbraid'];
+const attribution = {};
+const incomingParameters = new URLSearchParams(window.location.search);
+attributionNames.forEach(name => {
+  const value = incomingParameters.get(name);
+  if (!value) return;
+  attribution[name] = value.slice(0, 500);
+  const input = document.createElement('input');
+  input.type = 'hidden'; input.name = name; input.value = attribution[name];
+  quoteForm.append(input);
+});
+window.dataLayer = window.dataLayer || [];
+let measurementConsent = { analytics: false, advertising: false };
+const confirmedSubmissions = new Set();
+window.VAAXMeasurement = Object.freeze({
+  getAttribution: () => ({ ...attribution }),
+  setConsent: ({ analytics = false, advertising = false } = {}) => {
+    measurementConsent = { analytics: analytics === true, advertising: advertising === true };
+  },
+  // Call only after the future backend confirms delivery with a unique ID.
+  recordBackendSuccess: ({ submissionId } = {}) => {
+    if (quoteForm.dataset.backendConnected !== 'true' || !measurementConsent.analytics || typeof submissionId !== 'string' || !/^[A-Za-z0-9_-]{8,80}$/.test(submissionId) || confirmedSubmissions.has(submissionId)) return false;
+    confirmedSubmissions.add(submissionId);
+    window.dataLayer.push({ event: 'vaax_lead_success', submission_id: submissionId, advertising_consent: measurementConsent.advertising });
+    return true;
+  }
+});
+document.querySelectorAll('[data-vaax-interaction]').forEach(element => {
+  element.addEventListener('click', () => {
+    if (!measurementConsent.analytics) return;
+    window.dataLayer.push({ event: 'vaax_interaction', interaction_type: element.dataset.vaaxInteraction, element_id: element.id });
+  });
+});
