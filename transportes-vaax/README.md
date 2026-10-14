@@ -63,3 +63,9 @@ Se extrajo el nuevo ZIP a una carpeta temporal y se sirvió con un servidor HTTP
 Texto de contenido y campos de formulario de al menos 16 px, notas de 14 px y etiquetas auxiliares ampliadas. Enlaces de WhatsApp con iconos SVG locales, etiquetas accesibles y ambas líneas originales. Botón circular fijo abajo a la derecha para volver al inicio mediante icono de flecha, también disponible sin JavaScript. Menú colapsable hasta 1100 px para acomodar la tipografía mayor.
 
 Verificado en Chromium a 320, 390, 768, 1024, 1100, 1280, 1440 y 1920 px: sin desbordamiento horizontal, errores de JavaScript ni errores HTTP. Se comprobaron el menú, las etiquetas y destinos de WhatsApp, la posición fija del botón y su retorno al inicio.
+
+## Servicios y movimiento ambiental
+
+La fotografía de servicios mantiene altura propia (520 px; 490 px en teléfonos), independiente de los desplegables. La ruta del mapa se anima en bucle junto con un pulso suave en origen; también se animan los indicadores de señal y la flecha de desplazamiento. El movimiento se pausa al salir su sección de pantalla y se desactiva con `prefers-reduced-motion`.
+
+Validado con todos los desplegables abiertos a 320, 390, 768, 1024 y 1440 px: la imagen conserva exactamente su altura, sin desbordamiento horizontal. Se comprobó el bucle durante más de dos ciclos, la pausa fuera de pantalla y la desactivación con movimiento reducido. Sin errores de JavaScript.

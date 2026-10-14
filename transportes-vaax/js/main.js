@@ -108,3 +108,11 @@ document.querySelector('#quote-form').addEventListener('submit', event => {
   window.location.href = mailto;
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
+
+// Pause repeating decorative motion when its section leaves the viewport.
+if ('IntersectionObserver' in window) {
+  const motionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.target.classList.toggle('motion-paused', !entry.isIntersecting));
+  });
+  document.querySelectorAll('.hero, .security').forEach(section => motionObserver.observe(section));
+}

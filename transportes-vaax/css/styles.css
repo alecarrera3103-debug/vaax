@@ -39,3 +39,21 @@ body{font-size:16px}
 @media(max-width:580px){.hero-actions{gap:14px}.hero h1{font-size:clamp(35px,9.5vw,54px)}.hero-description{font-size:16px}.hero-visual{height:390px}.image-caption{font-size:12px;max-width:280px}.hero-photo-bottom{font-size:11px}.hero-photo-bottom>span:first-child{max-width:60%}.capacity{padding:16px 20px;max-width:235px}.capacity>span,.capacity small{font-size:11px}.values{grid-template-columns:1fr;gap:20px}.values>div{display:grid;grid-template-columns:28px 1fr;column-gap:12px}.values h3{margin-top:0}.values p{grid-column:2}.service-feature{min-height:490px}.service-feature .eyebrow{font-size:12px}.fleet-bottom{flex-wrap:wrap}.fleet-bottom p:not(.eyebrow){max-width:none}.fleet-controls{margin-left:auto}.process-steps h3{font-size:19px}.process-steps li{min-height:115px}.form-grid{grid-template-columns:1fr}.quote-form{padding:28px 22px}.footer-top>p{font-size:17px}.footer-bottom>span:nth-child(2){line-height:1.8}.map-label{font-size:11px}.map-caption{font-size:11px}.map-disclaimer{font-size:13px!important}.contact-email{font-size:16px}}
 
 .brand>span{text-align:center}
+
+/* Keep the service photograph independent of accordion height. */
+.service-layout{align-items:start}
+.service-feature{align-self:start;height:520px;min-height:0}
+@media(max-width:580px){.service-feature{height:490px}}
+
+/* Ambient movement uses paint-only properties and never changes layout. */
+@media(prefers-reduced-motion:no-preference){
+  .route-art.visible .route-line{animation:routeFlow 1.6s linear infinite}
+  .route-art .route-halo{animation:routePulse 3s ease-in-out infinite}
+  .live-dot{animation:signalPulse 3s ease-in-out infinite}
+  .scroll-cue>span>.icon{animation:scrollHint 2.8s ease-in-out infinite}
+  .motion-paused .route-line,.motion-paused .route-halo,.motion-paused .live-dot,.motion-paused .scroll-cue>span>.icon{animation-play-state:paused!important}
+  @keyframes routeFlow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}
+  @keyframes routePulse{0%,100%{opacity:.45;stroke-width:1}50%{opacity:1;stroke-width:3}}
+  @keyframes signalPulse{0%,100%{box-shadow:0 0 0 3px #d9ae3018}50%{box-shadow:0 0 0 7px #d9ae3030}}
+  @keyframes scrollHint{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
+}
