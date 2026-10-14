@@ -1,25 +1,43 @@
 # Transportes VAAX
 
-Sitio corporativo de una página, en español de México. HTML, CSS y JavaScript nativos; sin backend, compilación ni dependencias de ejecución externas. Las fuentes se sirven localmente y conservan sus licencias en `assets/fonts`.
+Sitio corporativo de una página en español de México, desarrollado con HTML, CSS y JavaScript nativos. Sin frameworks, compilación, backend ni servicios externos de envío. Imágenes, fuentes y SVG incluidos localmente.
 
 ## Abrir y publicar
 
-Abre `index.html` directamente en un navegador. Para desarrollo, desde `/workspace/vaax/transportes-vaax` ejecuta:
+Extrae **todo** `Transportes-VAAX-completo.zip` y sube su contenido a la raíz pública de tu hosting, conservando `css/`, `js/` y `assets/`. No requiere instalar paquetes. Para desarrollo:
 
 ```sh
-python -m http.server 8000 --bind 0.0.0.0
+cd /workspace/vaax/transportes-vaax
+python -m http.server 8010 --bind 0.0.0.0
 ```
 
-En un hosting estático, sube **el contenido** de esta carpeta a la raíz pública. Conserva las rutas relativas. No hace falta instalar paquetes ni publicar los PDF de referencia.
+También se entrega `VAAX-vista-completa.html`, una copia autónoma del mismo sitio con los recursos incorporados. Descárgala y ábrela en tu navegador para visualizarla sin carpetas adicionales. El archivo está dentro del ZIP y en la raíz del repositorio. Para editar usa los archivos separados.
 
-## Funcionalidades
+El protocolo `file://` está bloqueado por el navegador administrado de este entorno. Las pruebas se realizan mediante servidores HTTP estáticos; el sitio no utiliza módulos, fetch ni rutas absolutas.
 
-- Navegación por secciones, menú móvil con cierre mediante Escape, indicador de desplazamiento.
-- Servicios desplegables nativos, galería manual con flechas y soporte de teclado.
-- Apariciones progresivas y recorrido gráfico; se respeta la preferencia de movimiento reducido.
-- Contenido y contacto disponibles sin JavaScript. La galería y la preparación automática del correo requieren JavaScript.
-- Formulario con validación nativa y enlace `mailto:` codificado. Abre el cliente de correo; no envía desde un servidor ni guarda datos. Si no hay un cliente configurado, se muestra el correo de contacto para envío manual.
-- Dos enlaces de WhatsApp independientes con mensaje precargado, además de enlaces telefónicos.
+## Interacciones y accesibilidad
+
+- Menú móvil y de tabletas con Escape, navegación por secciones y flecha fija para volver al inicio.
+- Acordeón exclusivo con transiciones de altura mediante CSS Grid. Botones semánticos con `aria-expanded`, `aria-controls`, paneles identificados y contenido cerrado inerte. Flechas arriba/abajo, Inicio y Fin recorren los controles. Se permite cerrar el panel activo para dejar todos cerrados. Sin JavaScript se conservan los `details` nativos con el mismo atributo `name` para exclusividad en navegadores compatibles.
+- La imagen de servicios mantiene altura independiente: 520 px en escritorio/tabletas y 490 px en teléfonos.
+- Entradas diferenciadas para títulos, fotografía de Nosotros, listado de seguridad, proceso y formulario. Parallax acotado a ±12 px, solo en escritorio, sobre la imagen principal y la fotografía de Nosotros.
+- Rutas animadas, pulsos suaves, microinteracciones de botones y flotilla con transición direccional, paginación accesible, teclado y gesto horizontal táctil. No hay avance automático de fotografías.
+- Las animaciones repetitivas se pausan fuera de pantalla y se desactivan con `prefers-reduced-motion`. El desplazamiento de página es nativo.
+- SVG de correo, teléfono, WhatsApp, Instagram y Facebook en contacto/footer. Los originales están en `assets/icons`; los símbolos se incorporan en el HTML para evitar solicitudes adicionales. Facebook no tiene enlace porque no se ha confirmado su URL.
+- Texto de contenido y campos de al menos 16 px, notas de 14 px y estados de foco visibles. Fuentes locales con sus licencias en `assets/fonts`.
+
+## Formulario: envío pendiente
+
+`#quote-form` es un formulario semántico con `method="post"`, `action="#"`, seis campos con `name`, `id`, `label` y validaciones HTML. **No envía mensajes ni abre aplicaciones de correo.** El controlador de `submit` en `js/main.js` impide la recarga y muestra un aviso explícito. No realiza solicitudes ni guarda los datos. Sin JavaScript el botón permanece deshabilitado y se explica que el envío no está disponible.
+
+Para conectar PHP/SMTP o un endpoint:
+
+1. Cambia `action="#"` por la ruta de tu servidor y conserva `method="post"`.
+2. Sustituye el bloque señalado como `Integration point` en `js/main.js` por tu implementación de envío, o retíralo para utilizar el envío HTML nativo.
+3. Retira `disabled` del botón si vas a permitir envío nativo sin JavaScript.
+4. Implementa validación de servidor y respuesta real antes de mostrar un mensaje de éxito. No incluyas credenciales SMTP en HTML o JavaScript.
+
+Los enlaces de correo directo en contacto/footer siguen apuntando al correo confirmado; son independientes del formulario.
 
 ## Fuentes y decisiones editoriales
 
@@ -46,26 +64,6 @@ No se ha desplegado ni enviado ningún mensaje o correo. Los enlaces abren las a
 
 ## Validación
 
-Revisión visual con Chromium en escritorio y móvil. Verificación automatizada de carga de imágenes, enlaces internos, galería, desplegables, menú móvil, Escape, composición y codificación del correo, movimiento reducido y contenido sin JavaScript. Sin desbordamiento horizontal en anchos de 320, 390, 768, 1024, 1440 y 1920 px. Sin errores de JavaScript en los recorridos probados.
+Revisión visual en Chromium de escritorio y móvil. Verificados los tamaños 320, 390, 580, 768, 1024, 1100, 1280, 1440 y 1920 px sin desbordamiento horizontal. Comprobados: carga de todas las imágenes y SVG, exclusividad del acordeón, altura constante de imagen, navegación de teclado, paginación y flechas de flotilla, menú móvil, ausencia de solicitudes/recarga al enviar el formulario, animaciones y preferencia de movimiento reducido. Sin JavaScript se mantienen contenido, contacto y acordeón nativo; el envío permanece deshabilitado. Sin errores JavaScript ni respuestas HTTP fallidas en los recorridos probados.
 
-La apertura directa mediante `file://` no pudo validarse en el navegador administrado: su política bloquea ese protocolo (`ERR_BLOCKED_BY_ADMINISTRATOR`). La validación funcional se realizó mediante servidor HTTP estático. El proyecto no usa módulos, fetch ni rutas absolutas.
-
-## Entrega portable y recuperación de visualización
-
-El ZIP `Transportes-VAAX-completo.zip` contiene `index.html`, `css/`, `js/` y `assets/` directamente en su raíz. Extrae **todo** el ZIP antes de abrir `index.html`: descargar solo ese archivo no descarga sus recursos. En hosting convencional sube todos los archivos a la misma carpeta pública, conservando su estructura. Las rutas son relativas y también sirven desde una subcarpeta.
-
-`VAAX-vista-completa.html` es una copia autónoma generada a partir del mismo diseño: incluye CSS, JavaScript, imágenes y fuentes dentro del HTML. Puedes descargarla y abrirla sin carpetas adicionales. No reemplaza los archivos fuente; para editar el sitio usa `index.html`, `css/styles.css` y `js/main.js`. El HTML autónomo también está dentro del ZIP.
-
-Se extrajo el nuevo ZIP a una carpeta temporal y se sirvió con un servidor HTTP estático independiente. Sus 18 archivos respondieron HTTP 200 y coincidieron byte por byte con el contenido del ZIP. Se verificaron tipos MIME de CSS y JavaScript, fuentes, logotipo, imágenes, galería y menú móvil. No se detectaron 404 ni errores de JavaScript. Las capturas de escritorio del original, el ZIP extraído y la vista autónoma fueron idénticas píxel por píxel. La vista autónoma no solicitó recursos HTTP adicionales al documento.
-
-## Ajustes de legibilidad y controles
-
-Texto de contenido y campos de formulario de al menos 16 px, notas de 14 px y etiquetas auxiliares ampliadas. Enlaces de WhatsApp con iconos SVG locales, etiquetas accesibles y ambas líneas originales. Botón circular fijo abajo a la derecha para volver al inicio mediante icono de flecha, también disponible sin JavaScript. Menú colapsable hasta 1100 px para acomodar la tipografía mayor.
-
-Verificado en Chromium a 320, 390, 768, 1024, 1100, 1280, 1440 y 1920 px: sin desbordamiento horizontal, errores de JavaScript ni errores HTTP. Se comprobaron el menú, las etiquetas y destinos de WhatsApp, la posición fija del botón y su retorno al inicio.
-
-## Servicios y movimiento ambiental
-
-La fotografía de servicios mantiene altura propia (520 px; 490 px en teléfonos), independiente de los desplegables. La ruta del mapa se anima en bucle junto con un pulso suave en origen; también se animan los indicadores de señal y la flecha de desplazamiento. El movimiento se pausa al salir su sección de pantalla y se desactiva con `prefers-reduced-motion`.
-
-Validado con todos los desplegables abiertos a 320, 390, 768, 1024 y 1440 px: la imagen conserva exactamente su altura, sin desbordamiento horizontal. Se comprobó el bucle durante más de dos ciclos, la pausa fuera de pantalla y la desactivación con movimiento reducido. Sin errores de JavaScript.
+El ZIP se valida con CRC y comparación de todos los archivos fuente; la copia autónoma también se prueba mediante HTTP antes de entregar. No se ha desplegado un sitio público ni enviado mensajes a contactos.
